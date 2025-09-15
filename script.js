@@ -33,6 +33,7 @@ const wpmEl = document.getElementById('wpm');
 const accuracyEl = document.getElementById('accuracy');
 const restartBtn = document.getElementById('restart-btn');
 const testAreaEl = document.querySelector('.test-area');
+const cursor = document.getElementById('cursor');
 
 let timer;
 let timeLeft = 15;
@@ -40,6 +41,7 @@ let currentWordIndex = 0;
 let correctChars = 0;
 let totalChars = 0;
 let testActive = false;
+let timerStarted = false;
 
 function getRandomWords() {
     return words.sort(() => Math.random() - 0.5).slice(0, 30);
@@ -53,16 +55,43 @@ function displayWords() {
         span.innerText = word + ' ';
         wordsContainer.appendChild(span);
     });
+    // Use a small timeout to ensure the DOM is updated before moving the cursor
+    setTimeout(moveCursor, 1);
 }
 
-function startTest() {
-    displayWords();
+function moveCursor() {
+    const wordSpans = wordsContainer.querySelectorAll('span');
+    if (currentWordIndex >= wordSpans.length) {
+        cursor.style.display = 'none';
+        return;
+    }
+    cursor.style.display = 'block';
+
+    const currentSpan = wordSpans[currentWordIndex];
+    const rect = currentSpan.getBoundingClientRect();
+    const containerRect = testAreaEl.getBoundingClientRect();
+
+    cursor.style.left = `${rect.left - containerRect.left}px`;
+    cursor.style.top = `${rect.top - containerRect.top}px`;
+    cursor.style.height = `${rect.height}px`;
+}
+
+function resetTest() {
+    clearInterval(timer);
+    timeLeft = 15;
+    timerEl.innerText = timeLeft;
+    currentWordIndex = 0;
+    correctChars = 0;
+    totalChars = 0;
+    testActive = true;
+    timerStarted = false;
+    inputArea.disabled = false;
     inputArea.value = '';
     inputArea.focus();
-    testActive = true;
     resultsEl.style.display = 'none';
     testAreaEl.style.display = 'block';
-    timer = setInterval(updateTimer, 1000);
+    wordsContainer.innerHTML = ''; // Clear words initially
+    cursor.style.display = 'none'; // Hide cursor initially
 }
 
 function updateTimer() {
@@ -83,15 +112,23 @@ function endTest() {
     accuracyEl.innerText = accuracy;
     resultsEl.style.display = 'block';
     testAreaEl.style.display = 'none';
+    cursor.style.display = 'none';
 }
 
 inputArea.addEventListener('input', () => {
-    if (!testActive) {
-        startTest();
+    if (!timerStarted && testActive) {
+        timer = setInterval(updateTimer, 1000);
+        timerStarted = true;
+        displayWords(); // Display words on first input
     }
 
-    const typedValue = inputArea.value;
+    if (!testActive) return;
+
+    // A small guard to prevent errors if words are not loaded yet
     const wordSpans = wordsContainer.querySelectorAll('span');
+    if (wordSpans.length === 0) return;
+
+    const typedValue = inputArea.value;
     const currentSpan = wordSpans[currentWordIndex];
     const currentWord = currentSpan.innerText.trim();
 
@@ -105,6 +142,7 @@ inputArea.addEventListener('input', () => {
             currentSpan.classList.add('incorrect');
         }
         currentWordIndex++;
+        moveCursor();
         inputArea.value = '';
     } else {
         if (typedValue === currentWord.substring(0, typedValue.length)) {
@@ -116,13 +154,6 @@ inputArea.addEventListener('input', () => {
     }
 });
 
-restartBtn.addEventListener('click', () => {
-    timeLeft = 15;
-    currentWordIndex = 0;
-    correctChars = 0;
-    totalChars = 0;
-    inputArea.disabled = false;
-    startTest();
-});
+restartBtn.addEventListener('click', resetTest);
 
-startTest();
+resetTest();

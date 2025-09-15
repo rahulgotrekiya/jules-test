@@ -1,58 +1,85 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap');
+
 body {
-    background-color: #1a1a1a;
-    color: #f2f2f2;
+    background: linear-gradient(135deg, #1e1e2f 0%, #1d1b31 100%);
+    color: #e0e0e0;
     font-family: 'Space Grotesk', sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
     margin: 0;
+    overflow: hidden;
 }
 
 .container {
     text-align: center;
-    width: 80%;
+    width: 90%;
     max-width: 800px;
 }
 
 h1 {
-    font-size: 3rem;
-    color: #6c5ce7;
+    font-size: 3.5rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #ff8a00, #e52e71);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 0 15px rgba(229, 46, 113, 0.5);
+    margin-bottom: 0.5rem;
 }
 
 p {
     font-size: 1.2rem;
+    color: #a0a0c0;
 }
 
 .test-area {
     margin-top: 2rem;
     position: relative;
+    padding: 2rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 20px;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
 }
 
 #timer {
-    font-size: 2rem;
+    font-size: 2.5rem;
     font-weight: bold;
-    color: #fd79a8;
-    margin-bottom: 1rem;
+    color: #ff8a00;
+    margin-bottom: 1.5rem;
 }
 
 #words {
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
-    line-height: 2.5rem;
-    background-color: #2b2b2b;
-    padding: 1rem;
-    border-radius: 5px;
+    font-size: 1.6rem;
+    margin-bottom: 1.5rem;
+    line-height: 3rem;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 1.5rem;
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    min-height: 100px;
 }
 
 #input-area {
     width: 100%;
-    padding: 0.5rem;
+    padding: 1rem;
     font-size: 1.2rem;
-    border-radius: 5px;
-    border: 2px solid #6c5ce7;
-    background-color: #2b2b2b;
-    color: #f2f2f2;
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    color: #e0e0e0;
+    box-shadow: 0 4px 15px 0 rgba(0, 0, 0, 0.1);
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+#input-area:focus {
+    border-color: rgba(255, 138, 0, 0.5);
+    box-shadow: 0 0 20px rgba(255, 138, 0, 0.3);
 }
 
 .results {
@@ -61,31 +88,52 @@ p {
 }
 
 .results h2 {
-    color: #00b894;
+    color: #00f2a9;
 }
 
 #restart-btn {
     margin-top: 1rem;
-    padding: 0.8rem 1.5rem;
-    font-size: 1rem;
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
     font-weight: bold;
-    color: #f2f2f2;
-    background-color: #6c5ce7;
+    color: #ffffff;
+    background: linear-gradient(135deg, #e52e71, #ff8a00);
     border: none;
-    border-radius: 5px;
+    border-radius: 15px;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px 0 rgba(229, 46, 113, 0.3);
 }
 
 #restart-btn:hover {
-    background-color: #a29bfe;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px 0 rgba(229, 46, 113, 0.5);
 }
 
 .correct {
-    color: #00b894;
+    color: #00f2a9;
 }
 
 .incorrect {
-    color: #d63031;
+    color: #ff4757;
     text-decoration: underline;
+}
+
+#cursor {
+    position: absolute;
+    width: 3px;
+    background-color: #ff8a00;
+    z-index: 1;
+    border-radius: 2px;
+    transition: all 0.15s ease-out;
+    animation: blink 0.8s infinite;
+}
+
+@keyframes blink {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0;
+    }
 }
